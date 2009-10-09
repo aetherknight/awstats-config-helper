@@ -5,9 +5,11 @@ CONFDIR="/etc/awstats"
 
 puts "<html>"
 puts "<head>"
+puts "<title>List of AWStats Domains</title>"
 puts "</head>"
 puts "<body>"
 
+puts "<h1>List of AWStats Domains</h1>"
 puts "<ul>"
 
 sites = []
