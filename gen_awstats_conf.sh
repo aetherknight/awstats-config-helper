@@ -14,13 +14,14 @@ function add_domain() {
         prefix="https-"
     fi
 
-    echo "Generating awstat conf file for $DOMAIN"
+    local confname="/etc/awstats/awstats.$prefix$DOMAIN.conf"
+    echo "Generating $confname"
 
     cat /etc/awstats/awstats.model.conf | \
     sed -e "s/@DOMAIN@/$DOMAIN/g" \
         -e "s/@ALIASES@/$ALIASES/g" \
         -e "s|@LOGFILE@|$LOGFILE|g" \
-        > "/etc/awstats/awstats.$prefix$DOMAIN.conf"
+        > "$confname"
 }
 
 add_domain "www.aedifice.org" http "localhost ouroboros.aedifice.org aedifice.org ouroboros.local ouroboros.homedns.org" "/var/log/apache2/access_log"
