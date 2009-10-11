@@ -57,23 +57,37 @@ def replace_placeholders(in_io, out_io, args)
   end
 end
 
+# Each instance represents a single AWStats config file to be generated.
+# Instance attributes are dynamically declared using the add_attr class method,
+# and they will be used to replace the placeholder marks in the TEMPLATE file
+# to generate each config file.
 class AWStatsConf
   # The domain name that this config file represents.
   attr_accessor :domain
   # domain already exists, but it does not hurt to redeclare it. (Such as http
   # and https)
   attr_accessor :stype
-  # A list of domain name aliases.
-  attr_accessor :aliases
-  # Path to a logfile to get the data from.
-  attr_accessor :logfile
+
+  # Holds the attribute-placeholder pairings
+  @@attr_ph_map = {}
+  # Holds the attribute-default pairings
+  @@defaults = {}
+
+  # Specify an attribute, the placeholder it's value will replace, and the
+  # default value.
+  def self.add_attr(sym, placeholder, default)
+    attr_accessor sym
+    @@attr_ph_map[sym] = placeholder
+    @@defaults[sym] = default
+  end
 
   def initialize(domain, stype, &block)
     # Set some defaults
-    self.domain = "localhost"
-    self.stype = :http
-    self.aliases = ""
-    self.logfile = "/var/log/apache2/access_log"
+    @@defaults.each do |attr, default|
+      instance_variable_set("@#{attr.to_s}", default)
+    end
+    @domain = domain
+    @stype = stype
     # Override defaults with the block
     self.instance_eval(&block)
     # Construct the config file itself
@@ -86,9 +100,10 @@ class AWStatsConf
     puts "Generating #{confname}"
 
     replace_args = {}
-    replace_args["@DOMAIN@"] = self.domain
-    replace_args["@ALIASES@"] = self.aliases
-    replace_args["@LOGFILE@"] = self.logfile
+    @@attr_ph_map.each do |attr, ph|
+      #puts "#{attr}: #{ph}: @#{attr.to_s}"
+      replace_args[ph] = self.instance_variable_get( "@#{attr.to_s}")
+    end
 
     in_file = File.new(TEMPLATE, "r")
     out_file = File.new(confname, "w")
@@ -110,6 +125,11 @@ class AWStatsConf
   TEMPLATE = "/etc/awstats/awstats.model.conf"
   # A format string with a single %s to insert the type-domain.
   TARGETFORMAT = "/etc/awstats/awstats.%s.conf"
+
+  # Add attribute-placeholder mappings, and the default values.
+  add_attr :domain, "@DOMAIN@", "localhost"
+  add_attr :aliases, "@ALIASES@", ""
+  add_attr :logfile, "@LOGFILE@", "/var/log/apache2/access_log"
 end
 
 AWStatsConf.new "www.aedifice.org", :http do |s|
