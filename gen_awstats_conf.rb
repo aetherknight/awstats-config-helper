@@ -82,8 +82,7 @@ class AWStatsConf
 
   # Create the config file
   def gen_config()
-    prefix = self.stype.to_s + "-"
-    confname = "/etc/awstats/awstats.#{prefix}#{self.domain}.conf"
+    confname = sprintf(TARGETFORMAT, "#{@stype.to_s}-#{@domain}")
     puts "Generating #{confname}"
 
     replace_args = {}
@@ -105,8 +104,12 @@ end
 ##############################################################################
 # Edit things after this point.
 
+# Specify classwide settings
 class AWStatsConf
+  # The template file to generate the site-specific files from
   TEMPLATE = "/etc/awstats/awstats.model.conf"
+  # A format string with a single %s to insert the type-domain.
+  TARGETFORMAT = "/etc/awstats/awstats.%s.conf"
 end
 
 AWStatsConf.new "www.aedifice.org", :http do |s|
