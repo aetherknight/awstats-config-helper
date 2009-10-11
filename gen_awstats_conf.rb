@@ -1,5 +1,20 @@
 #!/usr/bin/env ruby
+# Generates awstats.sitename.conf files in /etc/awstats more easily by
+# specifying just the varying parts in this file, and filling in placeholder
+# marks within /etc/awstats.model.conf.
+#
+# After the main block of code, there is another class definition to define
+# constants for all of the AWStatsConf objects generated. After that, you can
+# add new AWStatsConf blocks at the bottom of the file. Each block should look
+# something like:
+#
+#   AWStatsConf.new "www.aedifice.org", :http do |s|
+#     s.aliases = "localhost ouroboros.aedifice.org aedifice.org"
+#     s.logfile = "/var/log/apache2/access_log"
+#   end
 
+
+##############################################################################
 # Replaces placeholder marks on in_io, and writes the result to out_io.
 #
 # This is meant to be similar to what autoconf configure scripts do.
@@ -85,7 +100,9 @@ class AWStatsConf
     end
   end
 end
-###########################################################
+
+##############################################################################
+# Edit things after this point.
 
 class AWStatsConf
   TEMPLATE = "/etc/awstats/awstats.model.conf"
