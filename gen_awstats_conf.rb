@@ -58,19 +58,20 @@ def replace_placeholders(in_io, out_io, args)
 end
 
 class AWStatsConf
-  # The domain name this AWStatConf will cover
+  # The domain name that this config file represents.
   attr_accessor :domain
-  # A type prefix because a given domain could have more than one conf.
-  attr_accessor :type
+  # domain already exists, but it does not hurt to redeclare it. (Such as http
+  # and https)
+  attr_accessor :stype
   # A list of domain name aliases.
   attr_accessor :aliases
   # Path to a logfile to get the data from.
   attr_accessor :logfile
 
-  def initialize(domain, type, &block)
+  def initialize(domain, stype, &block)
     # Set some defaults
     self.domain = "localhost"
-    self.type = :http
+    self.stype = :http
     self.aliases = ""
     self.logfile = "/var/log/apache2/access_log"
     # Override defaults with the block
@@ -81,7 +82,7 @@ class AWStatsConf
 
   # Create the config file
   def gen_config()
-    prefix = self.type.to_s + "-"
+    prefix = self.stype.to_s + "-"
     confname = "/etc/awstats/awstats.#{prefix}#{self.domain}.conf"
     puts "Generating #{confname}"
 
