@@ -13,6 +13,7 @@
 #     s.logfile = "/var/log/apache2/access_log"
 #   end
 
+$verbose = false
 
 ##############################################################################
 # Replaces placeholder marks on in_io, and writes the result to out_io.
@@ -98,6 +99,11 @@ class AWStatsConf
   def gen_config()
     confname = sprintf(TARGETFORMAT, "#{@stype.to_s}-#{@domain}")
     puts "Generating #{confname}"
+    if $verbose
+      @@attr_ph_map.each_key do |attr|
+        puts "    #{attr.to_s}: #{self.instance_variable_get('@' + attr.to_s)}"
+      end
+    end
 
     replace_args = {}
     @@attr_ph_map.each do |attr, ph|
