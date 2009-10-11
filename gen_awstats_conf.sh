@@ -31,4 +31,5 @@ add_domain "blog.aedifice.org" http "blog.ouroboros.local blog.ouroboros.homedns
 add_domain "lists.aedifice.org" http "lists.ouroboros.local lists.ouroboros.homedns.org" "/var/log/apache2/access_log"
 add_domain "nethack.aedifice.org" http "nethack.ouroboros.local nethack.ouroboros.homedns.org" "/var/log/apache2/access_log"
 add_domain "private.aedifice.org" http "localhost private.ouroboros.local private.ouroboros.homedns.org" "/var/log/apache2/access_log"
+add_domain "blog.aedifice.org" https "localhost blog.ouroboros.local blog.ouroboros.homedns.org" "/var/log/apache2/ssl_access_log"
 
