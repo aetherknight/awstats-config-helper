@@ -50,8 +50,8 @@
 # Note that there is no recursion on the placeholder strings and replacement.
 def replace_placeholders(in_io, out_io, args)
   in_io.each_line do |line|
-    args.each_key do |key|
-      line.sub!(key, args[key])
+    args.each do |key, value|
+      line.sub!(key, value)
     end
     out_io.write(line)
   end
