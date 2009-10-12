@@ -1,5 +1,4 @@
 README for AWStats Config Helpers
-#################################
 
 Author: William (B.J.) Snow Orvis <aetherknight{at}gmail{dot}com>
 Created: 2009-10-11
