@@ -19,6 +19,9 @@ There is also a rebuild.sh script to run both of these scripts automatically.
 If you use it, edit it first so that the generated index.html file gets put in
 the right place.
 
+The `awstats.model.conf` file should just be used as an example, like the
+existing configuration in `gen_awstats_conf.rb`. Both are tailored to my web
+server, and the some of the settings and paths in it may not work for you.
 
 How to use the `gen_awstats_conf.rb` script
 -----------------------------------------
