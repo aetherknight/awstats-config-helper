@@ -147,52 +147,5 @@ class AWStatsConf
   end
 end
 
-##############################################################################
-# Edit things after this point.
-
-# Specify classwide settings
-class AWStatsConf
-  # The template file to generate the site-specific files from
-  TEMPLATE = "/etc/awstats/awstats.model.conf"
-  # A format string with a single %s to insert the type-domain.
-  TARGETFORMAT = "/etc/awstats/awstats.%s.conf"
-
-  # Add attribute-placeholder mappings, and the default values.
-  add_attr :domain, "@DOMAIN@", "localhost"
-  add_attr :aliases, "@ALIASES@", ""
-  add_attr :logfile, "@LOGFILE@", "/var/log/apache2/access_log"
-end
-
-AWStatsConf.new "www.aedifice.org", :http do |s|
-  s.aliases = "localhost ouroboros.aedifice.org aedifice.org ouroboros.local ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/access_log"
-end
-AWStatsConf.new "dev.aedifice.org", :http do |s|
-  s.aliases = "dev.ouroboros.local dev.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/access_log"
-end
-AWStatsConf.new "dev.aedifice.org", :https do |s|
-  s.aliases = "dev.ouroboros.local dev.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/ssl_access_log"
-end
-AWStatsConf.new "blog.aedifice.org", :http do |s|
-  s.aliases = "blog.ouroboros.local blog.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/access_log"
-end
-AWStatsConf.new "lists.aedifice.org", :http do |s|
-  s.aliases = "lists.ouroboros.local lists.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/access_log"
-end
-AWStatsConf.new "nethack.aedifice.org", :http do |s|
-  s.aliases = "nethack.ouroboros.local nethack.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/access_log"
-end
-AWStatsConf.new "private.aedifice.org", :http do |s|
-  s.aliases = "localhost private.ouroboros.local private.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/access_log"
-end
-AWStatsConf.new "blog.aedifice.org", :https do |s|
-  s.aliases = "localhost blog.ouroboros.local blog.ouroboros.homedns.org"
-  s.logfile = "/var/log/apache2/ssl_access_log"
-end
+load "/etc/awstats/gen_awstats.conf"
 
