@@ -2,8 +2,6 @@ AWStats Config Helpers
 ======================
 
 * **Author:** William (B.J.) Snow Orvis <aetherknight{at}gmail{dot}com>
-* **Created:** 2009-10-11
-* **Modified:** 2009-10-11
 * **License:** MIT (feel free to modify and redistribute, but please give me
   credit. See the source files for the text of the license)
 
