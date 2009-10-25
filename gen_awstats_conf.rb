@@ -161,6 +161,13 @@ class AWStatsConf
   add_attr :domain, "@DOMAIN@", "localhost"
   add_attr :aliases, "@ALIASES@", ""
   add_attr :logfile, "@LOGFILE@", "/var/log/apache2/access_log"
+  # See http://awstats.sourceforge.net/docs/awstats_config.html#LogFormat
+#  add_attr :logformat, "@LOGFORMAT@", "1"
+
+# My apache vhost log format string:
+# "%t %h %l %u %v \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" VLOG=%{VLOG}e"
+  add_attr :logformat, "@LOGFORMAT@",
+    "%time1 %host %other %logname %virtualname %methodurl %code %bytesd %refererquot %uaquot %other"
 end
 
 AWStatsConf.new "www.aedifice.org", :http do |s|
