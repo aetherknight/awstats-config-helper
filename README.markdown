@@ -12,6 +12,7 @@ domains. At present, there are two main helper scripts, written in (and
 requiring only) ruby:
 
 * gen_awstats_conf.rb - will generate configuration files for multiple domains
+* gen_awstats.conf    - Configuration for gen_awstats_conf.rb
 * gen_awstats_list.rb - will print a basic html page that lists links to each
                         AWStats page for each configuration
 
@@ -22,18 +23,36 @@ the right place.
 gen_awstats_conf.rb
 ===================
 
-How to use the gen_awstats_conf.rb script
------------------------------------------
+Overview
+--------
 
-The configuration generation script makes it easier to generate several config
-files from a single template. It is made up of some code and a class
-definition, and then a set of blocks of ruby code that each generate a
-configuration file for a given domain-service pair.
+The configuration generation script makes it easier to generate several AWStats
+config files from a single template. It is made up of some code and a class
+definition, as well as a configuration file that contains blocks of ruby code
+to specify how to generate a configuration file for a given domain-service
+pair.
 
 The idea is that one can arbitrarily specify each placeholder mark (usually a
 sequence like @DOMAIN@, inspired by how AutoConf's configure generates a
 Makefile from Makefile.in), and map it to an object's attribute to make it
 easier to express variable configuration options.
+
+First, there is the `awstats.model.conf` template file. All of the generated
+configuration files will be based on it. It should look like a standard awstats
+configuration script, but some of the parameters should be set to a placeholder
+string rather than an actual value. For example, a line like:
+
+    LogFormat="@LOGFORMAT@"
+
+is not a valid LogFormat declaration, but the `@LOGFORMAT@` placeholder will
+get replaced by `gen_awstats_conf.rb` if `gen_awstats.conf` is configured
+correctly.
+
+Next is the `gen_awstats.conf` meta-configuration file. It sets up some global
+settings for the configuration generating script and then specifies the
+configuration for each domain-service pair. Read over the default meta-config
+file for an explanation of many of its settings, as well as examples of how it
+gets used.
 
 Creating a new Domain
 ---------------------
@@ -43,10 +62,11 @@ To specify a config file to be generated/regenerated, add/edit some lines like:
       s.something = "config specific value"
     end
 
-near the bottom of the script. There should be one such block for each config
-file you want created. The first parameter of AWStatsConf.new is the domain
-name, and the second parameter is a service name. The resulting configuration
-file for the above example would be `/etc/awstats/awstats.http-mydomain.conf`.
+near the bottom of the meta-config file. There should be one such block for
+each config file you want created. The first parameter of AWStatsConf.new is
+the domain name, and the second parameter is a service name. The resulting
+configuration file for the above example would be
+`/etc/awstats/awstats.http-mydomain.conf`.
 
 Within the block, attributes can be set to override their default values. The
 attributes that can be set are defined in the second class definition in the
