@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>List of AWStats Domains</title>
+  </head>
+  <body>
+    <h1>List of AWStats Domains</h1>
+    <ul>
+      <% conf_files.collect{|c| c.identifier}.sort.each do |s| %>
+        <li><a href="/cgi-bin/awstats.pl?config=<%= s %>"><%= s %></a></li>
+      <% end %>
+    </ul>
+  </body>
+</html>
