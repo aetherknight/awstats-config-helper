@@ -66,5 +66,31 @@ module AWStats
 
     end # describe the usual attributes
 
+    describe "handling arbitrary config keys" do
+      context "when it has only a default hash" do
+        it "should provide accessor methods for arbitrary hash values" do
+          custom_defaults = { 'love' => 'and peace' }
+          conffile = ConfFile.new(nil, custom_defaults)
+
+          conffile.love.should == custom_defaults['love']
+        end
+      end
+      context "when it has some values in a config hash" do
+        it "should provide accessor methods for arbitrary hash values" do
+          config = { 'love' => 'and peace' }
+          conffile = ConfFile.new(config, defaults)
+
+          conffile.love.should == config['love']
+        end
+      end
+
+      it "should raise NoMethodError for nonexistant values" do
+        config = { 'love' => 'and peace' }
+        conffile = ConfFile.new(config, defaults)
+
+        lambda { conffile.hate }.should raise_error
+      end
+    end # describe handling arbitrary config keys
+
   end # describe ConfFile
 end # module AWStats

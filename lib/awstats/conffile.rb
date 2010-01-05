@@ -32,30 +32,12 @@ module AWStats
       @defaults = defaults
     end
 
-    def lookup_key(key)
-      return @config[key.to_s] if @config and @config.has_key?(key.to_s)
-      @defaults[key.to_s]
+    def method_missing(sym, *args, &block)
+      return @config[sym.to_s] if @config and @config.has_key?(sym.to_s)
+      return @defaults[sym.to_s] if @defaults and @defaults.has_key?(sym.to_s)
+      raise NoMethodError
     end
 
-    def domain
-      lookup_key('domain')
-    end
-
-    def service
-      lookup_key('service')
-    end
-
-    def aliases
-      lookup_key('aliases')
-    end
-
-    def logfile
-      lookup_key('logfile')
-    end
-
-    def logformat
-      lookup_key('logformat')
-    end
   end
 
 end
