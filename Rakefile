@@ -32,7 +32,6 @@ namespace :aws do
 
   end
 
-  desc "PENDING: Run all gen commands"
-  task :gen do
-  end
+  desc "Run all gen commands"
+  task :gen => %w{gen:conf gen:list}
 end
