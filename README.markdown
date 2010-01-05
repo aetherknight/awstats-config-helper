@@ -3,7 +3,7 @@ AWStats Config Helpers
 
 * **Author:** William (B.J.) Snow Orvis <aetherknight{at}gmail{dot}com>
 * **License:** MIT (feel free to modify and redistribute, but please give me
-  credit. See the source files for the text of the license)
+  credit. See LICENSE for the text of the license)
 
 This Rakefile and associated ruby code is intended to make it easier to
 configure AWStats for multiple domains. At present, there are two main tasks,
