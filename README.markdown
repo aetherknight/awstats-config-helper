@@ -6,19 +6,22 @@ AWStats Config Helpers
   credit. See the source files for the text of the license)
 
 This Rakefile and associated ruby code is intended to make it easier to
-configure AWStats for multiple domains. At present, there are two main tasks:
+configure AWStats for multiple domains. At present, there are two main tasks,
+and several supplemental tasks:
 
 * `rake aws:gen:conf`   - Generates configuration files for multiple domains
-* `rake aws:gen:list`   - Generate a basic html page that lists links to each
+* `rake aws:gen:list`   - Generates a basic html page that lists links to each
   AWStats page for each configuration
 * `rake aws:gen`        - Runs both of the above tasks
+* `rake spec`           - Runs rspec tests for code in `lib` (hidden if rspec
+  is not installed)
 
 The tasks are configured using `config.yml`. It has three main sections:
 
 * **defaults**  - Default options for each service-type--domain-name pair.
 * **configs**   - A yaml list where each entry corresponds to a generated
   config file.
-* **html_list** - Some settings for aws:gen:list.
+* **html_list** - Some settings for `aws:gen:list`.
 
 The `config.yml` file should be tailored to your own configuration. It comes
 set up close to what I use on my personal web server, and some of the settings

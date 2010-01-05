@@ -35,3 +35,14 @@ namespace :aws do
   desc "Run all gen commands"
   task :gen => %w{gen:conf gen:list}
 end
+
+####
+begin
+  require 'spec/rake/spectask'
+  Spec::Rake::SpecTask.new {}
+  Spec::Rake::SpecTask.new do |t|
+    t.name = "spec:rcov"
+  end
+  CLOBBER.include "coverage"
+rescue LoadError
+end
