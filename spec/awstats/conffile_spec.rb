@@ -84,11 +84,14 @@ module AWStats
         end
       end
 
-      it "should raise NoMethodError for nonexistant values" do
+      it "should raise NoMethodError for nonexistant method => value maps" do
         config = { 'love' => 'and peace' }
         conffile = ConfFile.new(config, defaults)
 
-        lambda { conffile.hate }.should raise_error
+        lambda { conffile.hate }.should raise_error(
+          NoMethodError,
+          /^undefined method `hate' for #<.*ConfFile.*>$/
+        )
       end
     end # describe handling arbitrary config keys
 

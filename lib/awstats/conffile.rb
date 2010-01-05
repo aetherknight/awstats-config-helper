@@ -35,7 +35,7 @@ module AWStats
     def method_missing(sym, *args, &block)
       return @config[sym.to_s] if @config and @config.has_key?(sym.to_s)
       return @defaults[sym.to_s] if @defaults and @defaults.has_key?(sym.to_s)
-      raise NoMethodError
+      raise NoMethodError, "undefined method `#{sym}' for #{self}"
     end
 
   end
