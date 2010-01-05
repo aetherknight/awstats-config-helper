@@ -1,0 +1,106 @@
+# configure gen_awstats_conf.rb here.
+
+# Please read the README for an explanation of how to use this
+# meta-configuration file first.
+
+
+######################################################################
+# Global Settings
+
+# The template file to generate site-specific files from. You can edit the
+# settings within it that should be in all of the generated config files, and
+# you should also put placeholder markers in for config settings you want to
+# fill in with gen_awstats_conf.rb.
+template: awstats.model.conf.erb
+
+# A format string that specifies the default filename for generated config
+# files. It should have a single %s in it to specify where to put a string
+# based on the domain and service.
+#
+# For example:
+#
+#   Suppose the domain is www.aedifice.org and the service type is http.
+#   Furthermore, the targetformat is set to "/etc/awstats/awstats.%s.conf".
+#   Then the generated configuration filename will be
+#   "/etc/awstats/awstats.http-www.aedifice.org.conf".
+targetformat: "awstats.%s.conf"
+
+# Specify default values for attributes. If a given host does not declare one
+# of these keys below, the default gets used.
+defaults:
+  domain: localhost
+  service: http
+  aliases:
+  logfile: /var/log/apache2/access_log
+  # See http://awstats.sourceforge.net/docs/awstats_config.html#LogFormat for
+  # Logformat strings
+  #
+  # My apache vhost log format string:
+  #"%t %h %l %u %v \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" VLOG=%{VLOG}e"
+  logformat: "%time1 %host %other %logname %virtualname %methodurl %code %bytesd %refererquot %uaquot %other"
+
+######################################################################
+# Site configs
+configs:
+- domain: www.aedifice.org
+  service: http
+  aliases:
+    - localhost
+    - ouroboros.aedifice.org
+    - aedifice.org
+    - ouroboros.local
+    - ouroboros.homedns.org
+  logfile: /var/log/apache2/access_log
+
+- domain: dev.aedifice.org
+  service: http
+  aliases:
+    - dev.ouroboros.local
+    - dev.ouroboros.homedns.org
+  logfile: /var/log/apache2/access_log
+
+- domain: dev.aedifice.org
+  service: https
+  aliases:
+    - dev.ouroboros.local
+    - dev.ouroboros.homedns.org
+  logfile: /var/log/apache2/ssl_access_log
+
+- domain: blog.aedifice.org
+  service: http
+  aliases:
+    - blog.ouroboros.local
+    - blog.ouroboros.homedns.org
+  logfile: /var/log/apache2/access_log
+
+- domain: blog.aedifice.org
+  service: https
+  aliases:
+    - localhost
+    - blog.ouroboros.local
+    - blog.ouroboros.homedns.org
+  logfile: /var/log/apache2/ssl_access_log
+
+- domain: lists.aedifice.org
+  service: http
+  aliases:
+    - lists.ouroboros.local
+    - lists.ouroboros.homedns.org
+  logfile: /var/log/apache2/access_log
+
+- domain: nethack.aedifice.org
+  service: http
+  aliases:
+    - nethack.ouroboros.local
+    - nethack.ouroboros.homedns.org
+  logfile: /var/log/apache2/access_log
+
+- domain: private.aedifice.org
+  service: http
+  aliases:
+    - localhost
+    - private.ouroboros.local
+    - private.ouroboros.homedns.org
+  logfile: "/var/log/apache2/access_log"
+
+
