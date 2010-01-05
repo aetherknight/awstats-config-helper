@@ -33,11 +33,16 @@ module AWStats
     end
 
     def method_missing(sym, *args, &block)
-      return @config[sym.to_s] if @config and @config.has_key?(sym.to_s)
-      return @defaults[sym.to_s] if @defaults and @defaults.has_key?(sym.to_s)
-      raise NoMethodError, "undefined method `#{sym}' for #{self}"
+      key = sym.to_s
+      value = nil
+
+      value = @defaults[key] if @defaults and @defaults.has_key? key
+      value = @config[key] if @config and @config.has_key? key
+      raise NoMethodError, "undefined method `#{sym}' for #{self}" if value == nil
+
+      value = value.join(' ') if key == 'aliases' and value.is_a? Array
+      return value
     end
+  end # class Conffile
 
-  end
-
-end
+end # module AWStats

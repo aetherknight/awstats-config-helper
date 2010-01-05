@@ -23,7 +23,7 @@ module AWStats
 
         conf_struct['configs'][0]['domain'].should == conffile.domain
         conf_struct['configs'][0]['service'].should == conffile.service
-        conf_struct['configs'][0]['aliases'].should == conffile.aliases
+        conf_struct['configs'][0]['aliases'].join(' ').should == conffile.aliases
         conf_struct['configs'][0]['logfile'].should == conffile.logfile
         conf_struct['defaults']['logformat'].should == conffile.logformat
       end

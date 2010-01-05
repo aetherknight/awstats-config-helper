@@ -58,7 +58,7 @@ module AWStats
 
           conffile.domain.should == config['domain']
           conffile.service.should == config['service']
-          conffile.aliases.should == config['aliases']
+          conffile.aliases.should == config['aliases'].join(' ')
           conffile.logfile.should == config['logfile']
           conffile.logformat.should == config['logformat']
         end
@@ -90,10 +90,26 @@ module AWStats
 
         lambda { conffile.hate }.should raise_error(
           NoMethodError,
-          /^undefined method `hate' for #<.*ConfFile.*>$/
-        )
+          /^undefined method `hate' for #<.*ConfFile.*>$/ )
       end
     end # describe handling arbitrary config keys
+
+    describe "handling the aliases array" do
+      it "should turn the aliases array into a space delimited string" do
+        config = { 'aliases' => %w(localhost anotherhost) }
+        conffile = ConfFile.new(config, defaults)
+
+        conffile.aliases.should match "localhost anotherhost"
+      end
+
+      it "should turn the aliases array into a space delimited string" do
+        config = { 'domain' => 'somedomain' }
+        custom_defaults = { 'aliases' => %w(athird afourth) }
+        conffile = ConfFile.new(config, custom_defaults)
+
+        conffile.aliases.should match "athird afourth"
+      end
+    end # describe handling the aliases array
 
   end # describe ConfFile
 end # module AWStats
