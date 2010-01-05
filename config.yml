@@ -3,6 +3,9 @@
 # Please read the README for an explanation of how to use this
 # meta-configuration file first.
 
+html_list:
+  template: index.html.erb
+  outfile: index.html
 
 ######################################################################
 # Global Settings
