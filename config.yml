@@ -1,42 +1,36 @@
-# configure gen_awstats_conf.rb here.
-
 # Please read the README for an explanation of how to use this
 # meta-configuration file first.
 
+######################################################################
+# Html list configs
 html_list:
   template: index.html.erb
   outfile: index.html
 
 ######################################################################
-# Global Settings
-
-# The template file to generate site-specific files from. You can edit the
-# settings within it that should be in all of the generated config files, and
-# you should also put placeholder markers in for config settings you want to
-# fill in with gen_awstats_conf.rb.
-template: awstats.model.conf.erb
-
-# A format string that specifies the default filename for generated config
-# files. It should have a single %s in it to specify where to put a string
-# based on the domain and service.
+# Default configs
 #
-# For example:
-#
-#   Suppose the domain is www.aedifice.org and the service type is http.
-#   Furthermore, the targetformat is set to "/etc/awstats/awstats.%s.conf".
-#   Then the generated configuration filename will be
-#   "/etc/awstats/awstats.http-www.aedifice.org.conf".
-targetformat: "awstats.%s.conf"
-
-# Specify default values for attributes. If a given host does not declare one
-# of these keys below, the default gets used.
+# Specify default values for attributes. If a given host does not
+# declare one of these keys below, the default gets used.
 defaults:
+  # The erb template file to generate site-specific files from.
+  # It should be an absolute path or a path relative to the
+  # Rakefile/config.yml file. Edit the settings within it for all
+  # generated files, or add more erb markup and configuration here to
+  # customize it further.
+  template: awstats.model.conf.erb
+  # Format string that specifies the generated filenames. It should
+  # have a single %s in it that specifies where to put a service-domain
+  # pair. For example, suppose a domain is somedomain and the service is
+  # http, and the targetformat is "awstats.%s.conf". Then the generated
+  # configuration filename will be "awstats.http-somedomain.conf.
+  targetformat: awstats.%s.conf
   domain: localhost
   service: http
   aliases:
   logfile: /var/log/apache2/access_log
-  # See http://awstats.sourceforge.net/docs/awstats_config.html#LogFormat for
-  # Logformat strings
+  # See http://awstats.sourceforge.net/docs/awstats_config.html#LogFormat
+  # for Logformat strings.
   #
   # My apache vhost log format string:
   #"%t %h %l %u %v \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" VLOG=%{VLOG}e"

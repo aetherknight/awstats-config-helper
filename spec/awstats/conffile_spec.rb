@@ -6,6 +6,8 @@ module AWStats
 
     def defaults
       @defaults ||= {
+        'template' => 'awstats.model.conf.erb',
+        'targetformat' => 'awstats.%s.conf',
         'domain' => 'localhost',
         'service' => 'http',
         'aliases' => '',
@@ -131,14 +133,13 @@ QUOTE
     describe "#target_file" do
       it "returns a filename based on service, domain, and a format string" do
         config = { 'domain' => 'somedomain', 'service' => 'http' }
-        targetformat = "awstats.%s.conf"
-        conffile = ConfFile.new(config, defaults, targetformat)
+        conffile = ConfFile.new(config, defaults)
 
-        conffile.target_file.should == (targetformat % 'http-somedomain')
+        conffile.target_file.should == 'awstats.http-somedomain.conf'
       end
       it "returns nil if service or domain do not exist" do
-        targetformat = "awstats.%s.conf"
-        conffile = ConfFile.new(nil, nil, targetformat)
+        custom_default = { 'targetformat' => "awstats.%s.conf" }
+        conffile = ConfFile.new(nil, custom_default)
 
         conffile.target_file.should == nil
       end

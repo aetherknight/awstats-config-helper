@@ -29,7 +29,8 @@ module AWStats
       it "should add a target config item containing the target filename" do
         conffile = @handler.conf_files[0]
 
-        conffile.target_file.should == @conf_struct['targetformat'] % "#{conffile.service}-#{conffile.domain}"
+        conffile.target_file.should == @conf_struct['defaults']['targetformat'] % \
+          "#{conffile.service}-#{conffile.domain}"
       end
     end
 
@@ -47,16 +48,6 @@ module AWStats
         end
       end
     end
-
-    describe "#template" do
-      it "should return a template filename based on the template config setting" do
-        fixture = Fixture.new('multiple_domains')
-        handler = ConfHandler.new(fixture.config_stream)
-        conf_struct = YAML::load(fixture.config_stream)
-
-        handler.template.should == conf_struct['template']
-      end
-    end # describe #template
 
     describe "#generate_html_list" do
       it "should produce an html list of viewable domains from a template" do

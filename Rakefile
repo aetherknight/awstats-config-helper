@@ -12,9 +12,9 @@ namespace :aws do
 
     desc "Generates awstats.service-domain.conf files from template"
     task :conf do
-      template = File.open(handler.template).read
       handler.conf_files.each do |conf|
         puts "Creating #{conf.target_file}"
+        template = File.open(conf.template).read
         File.open(conf.target_file, "w") { |f| f.write conf.fill_in(template) }
       end
     end

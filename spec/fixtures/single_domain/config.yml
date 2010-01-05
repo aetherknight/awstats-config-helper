@@ -2,9 +2,9 @@ html_list:
   template: spec/fixtures/single_domain/index.html.erb
   outfile: index.html
 
-template: awstats.model.conf.erb
-targetformat: awstats.%s.conf
 defaults:
+  template: awstats.model.conf.erb
+  targetformat: awstats.%s.conf
   domain: localhost
   service: http
   aliases: ""

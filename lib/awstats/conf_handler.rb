@@ -7,17 +7,15 @@ module AWStats
 
     RESERVED_KEYS = %w(default template targetformat)
 
-    attr_reader :conf_files, :template, :html_template, :html_outfile
+    attr_reader :conf_files, :html_template, :html_outfile
 
     def initialize(stream)
       @config = YAML::load(stream)
-      @template = @config['template']
-      @targetformat = @config['targetformat']
       @defaults = @config['defaults']
       @hosts = @config['configs']
 
       @conf_files = @hosts.collect do |h|
-        ConfFile.new(h, @defaults, @targetformat)
+        ConfFile.new(h, @defaults)
       end
 
       @html_template = @config['html_list']['template']

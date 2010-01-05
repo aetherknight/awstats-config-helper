@@ -29,10 +29,9 @@ module AWStats
 
   class ConfFile
 
-    def initialize(config, defaults, targetformat = '/etc/awstats.%s.conf')
+    def initialize(config, defaults)
       @config = config
       @defaults = defaults
-      @targetformat = targetformat
     end
 
     def method_missing(sym, *args, &block)
@@ -61,7 +60,7 @@ module AWStats
     end
 
     def target_file
-      return @targetformat % identifier if identifier != nil
+      return targetformat % identifier if identifier != nil
       return nil
     end
   end # class Conffile
