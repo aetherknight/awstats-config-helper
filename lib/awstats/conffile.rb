@@ -47,17 +47,22 @@ module AWStats
       return value
     end
 
-    def fill_in(input)
-      template = ERB.new(input)
-      template.result(binding)
-    end
-
-    def target_file
+    def identifier
       begin
-        return @targetformat % "#{service}-#{domain}"
+        return "#{service}-#{domain}"
       rescue NoMethodError
         return nil
       end
+    end
+
+    def fill_in(input)
+      template = ERB.new(input)
+      return template.result(binding)
+    end
+
+    def target_file
+      return @targetformat % identifier if identifier != nil
+      return nil
     end
   end # class Conffile
 

@@ -144,5 +144,19 @@ QUOTE
       end
     end
 
+    describe "#identifier" do
+      it "returns a string made up of the service and domain" do
+        config = { 'domain' => 'somedomain', 'service' => 'http' }
+        conffile = ConfFile.new(config, defaults)
+
+        conffile.identifier.should == 'http-somedomain'
+      end
+      it "returns nil if service or domain do not exist" do
+        conffile = ConfFile.new(nil, nil)
+
+        conffile.identifier.should == nil
+      end
+    end
+
   end # describe ConfFile
 end # module AWStats
