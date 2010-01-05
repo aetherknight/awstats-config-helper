@@ -5,109 +5,103 @@ AWStats Config Helpers
 * **License:** MIT (feel free to modify and redistribute, but please give me
   credit. See the source files for the text of the license)
 
-These scripts are meant to make it easier to configure AWStats for multiple
-domains. At present, there are two main helper scripts, written in (and
-requiring only) ruby:
+This Rakefile and associated ruby code is intended to make it easier to
+configure AWStats for multiple domains. At present, there are two main tasks:
 
-* `gen_awstats_conf.rb` - will generate configuration files for multiple domains
-* `gen_awstats.conf`    - Configuration for gen_awstats_conf.rb
-* `gen_awstats_list.rb` - will print a basic html page that lists links to each
+* `rake aws:gen:conf`   - Generates configuration files for multiple domains
+* `rake aws:gen:list`   - Generate a basic html page that lists links to each
   AWStats page for each configuration
+* `rake aws:gen`        - Runs both of the above tasks
 
-There is also a rebuild.sh script to run both of these scripts automatically.
-If you use it, edit it first so that the generated index.html file gets put in
-the right place.
+The tasks are configured using `config.yml`. It has three main sections:
 
-The `awstats.model.conf` file should just be used as an example, like the
-existing configuration in `gen_awstats_conf.rb`. Both are tailored to my web
-server, and the some of the settings and paths in it may not work for you.
+* **defaults**  - Default options for each service-type--domain-name pair.
+* **configs**   - A yaml list where each entry corresponds to a generated
+  config file.
+* **html_list** - Some settings for aws:gen:list.
+
+The `config.yml` file should be tailored to your own configuration. It comes
+set up close to what I use on my personal web server, and some of the settings
+and paths in it may not work for you.
+
+There are also two erb template files, `awstats.model.conf.erb` and
+`index.html.erb`. The former is the (verbose) sample `awstats.model.conf` that
+comes with awstats, and it is provided as an example of how to add the erb
+syntax, but it will probably work for most configurations.
 
 Overview
 --------
 
-The configuration generation script makes it easier to generate several AWStats
-config files from a single template. It is made up of some code and a class
-definition, as well as a configuration file that contains blocks of ruby code
-to specify how to generate a configuration file for a given domain-service
-pair.
+`rake aws:gen:conf` makes it easier to generate several AWStats config files
+from a single template.
 
-The idea is that one can arbitrarily specify each placeholder mark (usually a
-sequence like `@DOMAIN@`, inspired by how AutoConf's configure generates a
-Makefile from Makefile.in), and map it to an object's attribute to make it
-easier to express variable configuration options.
+First, there is the `awstats.model.conf.erb` template file. All of the
+generated configuration files will be based on it. It should look like a
+standard awstats configuration script, but some of the parameters should be set
+to an erb string rather than an actual value. For example, a line like:
 
-First, there is the `awstats.model.conf` template file. All of the generated
-configuration files will be based on it. It should look like a standard awstats
-configuration script, but some of the parameters should be set to a placeholder
-string rather than an actual value. For example, a line like:
+    LogFormat="<%= logformat %>"
 
-    LogFormat="@LOGFORMAT@"
+is not a valid LogFormat declaration, but the `<%= logformat %>` placeholder
+will get replaced with a value from the current host configuration.
 
-is not a valid LogFormat declaration, but the `@LOGFORMAT@` placeholder will
-get replaced by `gen_awstats_conf.rb` if `gen_awstats.conf` is configured
-correctly.
-
-Next is the `gen_awstats.conf` meta-configuration file. It sets up some global
-settings for the configuration generating script and then specifies the
-configuration for each domain-service pair. Read over the default meta-config
-file for an explanation of many of its settings, as well as examples of how it
-gets used.
+Next is the `config.yml` meta-configuration file. It sets up some default
+settings for the generated configurations and then specifies the configuration
+for each service--domain pair. Read over the default `config.yml` file for an
+explanation of many of its settings, as well as examples of how it gets used.
 
 Creating a new Domain
 ---------------------
 
 To specify a config file to be generated/regenerated, add/edit some lines like:
 
-    AWStatsConf.new "mydomain", :http do |s|
-      s.something = "config specific value"
-    end
+    configs:
+    ...
+    - domain: mydomain
+      service: http
+      something: some specific value
 
-near the bottom of the meta-config file. There should be one such block for
-each config file you want created. The first parameter of AWStatsConf.new is
-the domain name, and the second parameter is a service name. The resulting
-configuration file for the above example would be
-`/etc/awstats/awstats.http-mydomain.conf`.
-
-Within the block, attributes can be set to override their default values. The
-attributes that can be set are defined in the second class definition in the
-configuration part of the script file, using `add_attr`. This will look
-something like:
-
-    add_attr :something, "@SOMETHING@", "some default value"
-
-where `:something` corresponds to the s.something attribute, `@SOMETHING@` is a
-placeholder mark that will get replaced by either the default value or the
-value of `s.something`, and the third field is the default value.
-
-The basic idea is that you can add additional `add_attr` lines and then modify
-`awstats.model.conf` to specify where to fill in the values for the generated
-config files.
+as part of the list of configurations. There should be one such block for
+each config file you want created. Within the `awstats.model.conf.erb` template
+file, each left-hand parameter will get replaced with a right-hand value in the
+final output. If the block does not specify a value used in the template file,
+a value from the default section will get used instead (and if it does not
+exist there either, an error will occur).
 
 
-Example of Adding an Extra Variable Parameter
----------------------------------------------
+Adding an Extra Variable Parameter
+----------------------------------
 
-Suppose you will have more than one LogType amongst your derived configuration
-files. In order to add this, you will need to edit awstats.model.conf so that:
+It is also possible to add your own attributes to the template file and
+config.yml.  Suppose you will have more than one LogType amongst your derived
+configuration files. In order to add this, you will need to edit
+`awstats.model.conf.erb` so that:
 
-    LogType="@LOGTYPE@"
+    LogType="<%= logtype %>"
 
-Add an add_attr line:
+Add a default value:
 
-    add_attr :logtype, "@LOGTYPE@", "W"
+    defaults:
+    ...
+    logtype: W
 
 And specify the change for the non-default cases:
 
-    AWStatsConf.new "somedomain", :smtp do |s|
-      s.logtype = "M"
-    end
+    configs:
+    ...
+    - domain: somedomain
+      service: smtp
+      logtype: M
 
-After these changes have been made, run `gen_awstats_conf.rb` to regenerate the
+After these changes have been made, run `rake aws:gen:conf` to regenerate the
 config files with the new changes.
 
 
-Inspiration
------------
+Original Inspiration
+--------------------
+
+Since rewriting this tool to use Rake and ERB, it does not really look anything
+like the following projects anymore. However, they are still worth mentioning.
 
 * http://www.gnu.org/software/autoconf/
 * http://www.mattdorn.com/content/automating-awstats-configuration-for-multiple-domains/
