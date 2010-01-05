@@ -111,5 +111,21 @@ module AWStats
       end
     end # describe handling the aliases array
 
+    describe "#fill_in" do
+      it "should provide the ConfFile's methods to an erb template" do
+        config = { 'domain' => 'somedomain',
+          'aliases' => %w(localhost anotherhost)
+        }
+        intext = <<-QUOTE
+SiteDomain="<%= domain %>"
+HostAliases="<%= aliases %>"
+QUOTE
+        conffile = ConfFile.new(config, defaults)
+
+        output = conffile.fill_in(intext)
+        output.should match %Q{SiteDomain="somedomain"}
+        output.should match %Q{HostAliases="localhost anotherhost"}
+      end
+    end # describe #fill_in
   end # describe ConfFile
 end # module AWStats

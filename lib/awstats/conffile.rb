@@ -23,6 +23,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+require 'erb'
+
 module AWStats
 
   class ConfFile
@@ -42,6 +44,11 @@ module AWStats
 
       value = value.join(' ') if key == 'aliases' and value.is_a? Array
       return value
+    end
+
+    def fill_in(input)
+      template = ERB.new(input)
+      template.result(binding)
     end
   end # class Conffile
 
