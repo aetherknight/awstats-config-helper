@@ -11,10 +11,13 @@ module AWStats
     def initialize(stream)
       @config = YAML::load(stream)
       @template = @config['template']
+      @targetformat = @config['targetformat']
       @defaults = @config['defaults']
       @hosts = @config['configs']
 
-      @conf_files = @hosts.collect{ |h| ConfFile.new(h, @defaults) }
+      @conf_files = @hosts.collect do |h|
+        ConfFile.new(h, @defaults, @targetformat)
+      end
     end
 
   end # class ConfHandler

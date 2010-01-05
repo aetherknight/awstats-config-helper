@@ -127,5 +127,22 @@ QUOTE
         output.should match %Q{HostAliases="localhost anotherhost"}
       end
     end # describe #fill_in
+
+    describe "#target_file" do
+      it "returns a filename based on service, domain, and a format string" do
+        config = { 'domain' => 'somedomain', 'service' => 'http' }
+        targetformat = "awstats.%s.conf"
+        conffile = ConfFile.new(config, defaults, targetformat)
+
+        conffile.target_file.should == (targetformat % 'http-somedomain')
+      end
+      it "returns nil if service or domain do not exist" do
+        targetformat = "awstats.%s.conf"
+        conffile = ConfFile.new(nil, nil, targetformat)
+
+        conffile.target_file.should == nil
+      end
+    end
+
   end # describe ConfFile
 end # module AWStats

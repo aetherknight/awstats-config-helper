@@ -8,6 +8,7 @@ module AWStats
       before(:each) do
         @fixture = Fixture.new('single_domain')
         @handler = ConfHandler.new(@fixture.config_stream)
+        @conf_struct = YAML::load(@fixture.config_stream)
       end
 
       it "should produce a single ConfFile" do
@@ -16,16 +17,19 @@ module AWStats
       end
 
       it "should produce a ConfFile that matches the config.yml" do
-        conf_stream = @fixture.config_stream
-        conf_struct = YAML::load(conf_stream)
-
         conffile = @handler.conf_files[0]
 
-        conf_struct['configs'][0]['domain'].should == conffile.domain
-        conf_struct['configs'][0]['service'].should == conffile.service
-        conf_struct['configs'][0]['aliases'].join(' ').should == conffile.aliases
-        conf_struct['configs'][0]['logfile'].should == conffile.logfile
-        conf_struct['defaults']['logformat'].should == conffile.logformat
+        @conf_struct['configs'][0]['domain'].should == conffile.domain
+        @conf_struct['configs'][0]['service'].should == conffile.service
+        @conf_struct['configs'][0]['aliases'].join(' ').should == conffile.aliases
+        @conf_struct['configs'][0]['logfile'].should == conffile.logfile
+        @conf_struct['defaults']['logformat'].should == conffile.logformat
+      end
+
+      it "should add a target config item containing the target filename" do
+        conffile = @handler.conf_files[0]
+
+        conffile.target_file.should == @conf_struct['targetformat'] % "#{conffile.service}-#{conffile.domain}"
       end
     end
 

@@ -1,4 +1,5 @@
 template: awstats.model.conf.erb
+targetformat: awstats.%s.conf
 defaults:
   domain: localhost
   service: http

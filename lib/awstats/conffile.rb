@@ -29,9 +29,10 @@ module AWStats
 
   class ConfFile
 
-    def initialize(config, defaults)
+    def initialize(config, defaults, targetformat = '/etc/awstats.%s.conf')
       @config = config
       @defaults = defaults
+      @targetformat = targetformat
     end
 
     def method_missing(sym, *args, &block)
@@ -49,6 +50,14 @@ module AWStats
     def fill_in(input)
       template = ERB.new(input)
       template.result(binding)
+    end
+
+    def target_file
+      begin
+        return @targetformat % "#{service}-#{domain}"
+      rescue NoMethodError
+        return nil
+      end
     end
   end # class Conffile
 
