@@ -1,0 +1,32 @@
+defaults:
+  domain: localhost
+  service: http
+  aliases:
+  logfile: /var/log/apache2/access_log
+  logformat: "%time1 %host %other %logname %virtualname %methodurl %code %bytesd %refererquot %uaquot %other"
+
+configs:
+- domain: somehost
+  service: http
+  aliases:
+    - localhost
+    - anothername
+    - anothername.local
+  logfile: /var/log/apache2/somehost_log
+
+- domain: anotherhost
+  service: http
+  logfile: /var/log/apache2/anotherhost_log
+
+- domain: host3
+  service: https
+  aliases:
+    - localhost
+    - anothername
+    - anothername.local
+
+- domain: host4
+  service: http
+  aliases:
+    - localhost
+
