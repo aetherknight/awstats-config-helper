@@ -52,11 +52,38 @@ module AWStats
       it "should return a template filename based on the template config setting" do
         fixture = Fixture.new('multiple_domains')
         handler = ConfHandler.new(fixture.config_stream)
-        conf_stream = fixture.config_stream
-        conf_struct = YAML::load(conf_stream)
+        conf_struct = YAML::load(fixture.config_stream)
 
         handler.template.should == conf_struct['template']
       end
     end # describe #template
+
+    describe "#generate_html_list" do
+      it "should produce an html list of viewable domains from a template" do
+        fixture = Fixture.new('multiple_domains')
+        handler = ConfHandler.new(fixture.config_stream)
+        conf_struct = YAML::load(fixture.config_stream)
+        sample_file = <<-QUOTE.gsub(/^        /, '')
+        <html>
+        <head>
+          <title>Some Title</title>
+        </head>
+        <body>
+          <ul>
+            <% conf_files.collect{|c| c.identifier}.sort.each do |s| %>
+              <li><a href="/cgi-bin/awstats.pl?config=<%= s %>"><%= s %></a></li>
+            <% end %>
+          </ul>
+        </body>
+        </html>
+        QUOTE
+
+        output = handler.generate_html_list(sample_file)
+        output.should match %r{<a href="/cgi-bin/awstats\.pl\?config=http-somehost">}
+        output.should match %r{<a href="/cgi-bin/awstats\.pl\?config=http-anotherhost">}
+        output.should match %r{<a href="/cgi-bin/awstats\.pl\?config=https-host3">}
+        output.should match %r{<a href="/cgi-bin/awstats\.pl\?config=http-host4">}
+      end
+    end # describe #generate_html_list
   end # describe ConfHandler
 end # module AWStats

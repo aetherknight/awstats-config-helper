@@ -1,5 +1,6 @@
 require 'awstats/conffile'
 require 'yaml'
+require 'erb'
 
 module AWStats
   class ConfHandler
@@ -20,5 +21,9 @@ module AWStats
       end
     end
 
+    def generate_html_list(input)
+      template = ERB.new(input)
+      return template.result(binding)
+    end
   end # class ConfHandler
 end # module AWStats
