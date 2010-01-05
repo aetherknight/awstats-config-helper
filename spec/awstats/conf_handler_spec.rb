@@ -43,5 +43,16 @@ module AWStats
         end
       end
     end
+
+    describe "#template" do
+      it "should return a template filename based on the template config setting" do
+        fixture = Fixture.new('multiple_domains')
+        handler = ConfHandler.new(fixture.config_stream)
+        conf_stream = fixture.config_stream
+        conf_struct = YAML::load(conf_stream)
+
+        handler.template.should == conf_struct['template']
+      end
+    end # describe #template
   end # describe ConfHandler
 end # module AWStats

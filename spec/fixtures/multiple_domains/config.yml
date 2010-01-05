@@ -1,3 +1,4 @@
+template: awstats.model.conf.erb
 defaults:
   domain: localhost
   service: http

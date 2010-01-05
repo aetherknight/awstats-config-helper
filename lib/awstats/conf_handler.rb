@@ -6,10 +6,11 @@ module AWStats
 
     RESERVED_KEYS = %w(default template targetformat)
 
-    attr_accessor :conf_files
+    attr_accessor :conf_files, :template
 
     def initialize(stream)
       @config = YAML::load(stream)
+      @template = @config['template']
       @defaults = @config['defaults']
       @hosts = @config['configs']
 
